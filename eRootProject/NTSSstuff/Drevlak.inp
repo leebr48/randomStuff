@@ -1,7 +1,7 @@
 <ThisIsInputFileForTransportFusion2019>
 TempDirectory  	TEMP_D3/
-MagneticConfig 	../forHakan/forDKES/hydra_Np04_20190108.bc
-NeoclassicDB   	../forHakan/forDKES/hydra_Np04_20190108.dk
+MagneticConfig 	../DKESstuff/hydra_Np04_20190108.bc
+NeoclassicDB   	../DKESstuff/hydra_Np04_20190108.dk
 epsEffCalculation	0
 tokamakFit     	0
 elongation     	1

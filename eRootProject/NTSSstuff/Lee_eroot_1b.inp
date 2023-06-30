@@ -1,7 +1,7 @@
 <ThisIsInputFileForTransportFusion2019>
 TempDirectory  	TEMP_D2/
-MagneticConfig 	../forHakan/forDKES/Lee_1.bc
-NeoclassicDB   	../forHakan/forDKES/Lee_1b.dk
+MagneticConfig 	../DKESstuff/Lee_1.bc
+NeoclassicDB   	../DKESstuff/Lee_1b.dk
 epsEffCalculation	0
 tokamakFit     	0
 elongation     	1
