@@ -80,7 +80,7 @@ makePlot(*multiPlot(xData, [vecs['ne'], vecs['nD'], vecs['nT'], vecs['nHe']]), r
 makePlot(*multiPlot(xData, [vecs['Te'], vecs['TD'], vecs['TT'], vecs['TT']]), r'Temperature (keV)', 'T', leg=['e', 'D', 'T', 'He'])
 makePlot(xData, vecs['Er'], r'Radial Electric Field (kV/m)', 'Er')
 makePlot(xData, vecs['p'], r'Pressure (Pa)', 'p')
-makePlot(*multiPlot(xData, [vecs['L11e'], vecs['L11D'], vecs['L11T']]), r'Thermal Transport Coefficients ($\mathrm{m^2/s}$)', 'L11s', leg=['e', 'D', 'T'])
+makePlot(*multiPlot(xData, [vecs['L11e'], vecs['L11D'], vecs['L11T']]), r'$L_{11}$ ($\mathrm{m^2/s}$)', 'L11s', leg=['e', 'D', 'T'])
 makePlot(xData, vecs['L11e']/(0.5*(vecs['L11D']+vecs['L11T'])), r'$ 2 L_{11}^{e} / \left(L_{11}^{D}+L_{11}^{T}\right) $', 'L11rat', yticks=0.5)
 makePlot(xData, vecs['Ibs'] / 1000, r'Bootstrap Current (kA)', 'Ibs')
 makePlot(xData, vecs['vaciota'], r'Vacuum Rotational Transform', 'vaciota')
