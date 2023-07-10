@@ -40,9 +40,11 @@ def fixInd(ind):
 def loadVec(ind):
     return filteredData[:, fixInd(ind)]
 
-def makePlot(xdata, ydata, ylabel, figName, leg=None, fileExt=fileExt, yticks=None):
+def makePlot(xdata, ydata, ylabel, figName, leg=None, fileExt=fileExt, yticks=None, ymin=None):
     plt.figure()
     plt.plot(xdata, ydata)
+    if ymin is not None:
+        plt.ylim(ymin=ymin)
     if yticks is not None:
         plt.yticks(np.arange(np.floor(np.min(ydata)), np.ceil(np.max(ydata))+yticks, yticks))
     plt.xlabel(xlab)
@@ -76,11 +78,11 @@ else:
     xData = vecs['r']
     xlab = r'$r$ (m)'
 
-makePlot(*multiPlot(xData, [vecs['ne'], vecs['nD'], vecs['nT'], vecs['nHe']]), r'Density ($10^{20}~\mathrm{m^{-3}}$)', 'n', leg=['e', 'D', 'T', 'He'])
-makePlot(*multiPlot(xData, [vecs['Te'], vecs['TD'], vecs['TT'], vecs['TT']]), r'Temperature (keV)', 'T', leg=['e', 'D', 'T', 'He'])
+makePlot(*multiPlot(xData, [vecs['ne'], vecs['nD'], vecs['nT'], vecs['nHe']]), r'Density ($10^{20}~\mathrm{m^{-3}}$)', 'n', leg=['e', 'D', 'T', 'He'], ymin=0)
+makePlot(*multiPlot(xData, [vecs['Te'], vecs['TD'], vecs['TT'], vecs['TT']]), r'Temperature (keV)', 'T', leg=['e', 'D', 'T', 'He'], ymin=0)
 makePlot(xData, vecs['Er'], r'Radial Electric Field (kV/m)', 'Er')
-makePlot(xData, vecs['p'], r'Pressure (Pa)', 'p')
-makePlot(*multiPlot(xData, [vecs['L11e'], vecs['L11D'], vecs['L11T']]), r'$L_{11}$ ($\mathrm{m^2/s}$)', 'L11s', leg=['e', 'D', 'T'])
+makePlot(xData, vecs['p'], r'Pressure (Pa)', 'p', ymin=0)
+makePlot(*multiPlot(xData, [vecs['L11e'], vecs['L11D'], vecs['L11T']]), r'$L_{11}$ ($\mathrm{m^2/s}$)', 'L11s', leg=['e', 'D', 'T'], ymin=0)
 makePlot(xData, vecs['L11e']/(0.5*(vecs['L11D']+vecs['L11T'])), r'$ 2 L_{11}^{e} / \left(L_{11}^{D}+L_{11}^{T}\right) $', 'L11rat', yticks=0.5)
 makePlot(xData, vecs['Ibs'] / 1000, r'Bootstrap Current (kA)', 'Ibs')
 makePlot(xData, vecs['vaciota'], r'Vacuum Rotational Transform', 'vaciota')
