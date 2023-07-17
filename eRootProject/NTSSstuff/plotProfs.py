@@ -1,4 +1,3 @@
-# FIXME probably get the volume of your run spot on 1900 m3 and remake these plots... if that configuration isn't totally broken
 # Settings
 profsFilePath = 'profs_1b'
 rhoMin = 0

@@ -3,7 +3,7 @@
 #Inputs
 rhoMin = 0
 rhoMax = 0.85
-DMercYMin = -0.01
+DMercYMin = -0.001
 DMercYMax = 0.01
 fileExt = 'png'
 
