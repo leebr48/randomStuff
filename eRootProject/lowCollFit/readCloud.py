@@ -4,6 +4,7 @@
 
 # User options #FIXME this should probably be made into argparse stuff
 
+loadPickle = 'allData.pkl' # None to load new data, path of pickle file to load old data
 directory = '/cobra/u/lebra/data/w7x/reactor/twentySecondObj12b' # Should be able to handle absolute and relative paths
 ext = 'W7X_REACTOR_woptim_forSfincs' #file extension, input.ext
 #FIXME I guess you could put filters for the surfaces you look at and such in here?... How best to do it, I'm not sure.
@@ -15,6 +16,7 @@ ext = 'W7X_REACTOR_woptim_forSfincs' #file extension, input.ext
 import warnings
 import os
 import numpy as np
+import pickle as pkl
 from glob import glob
 from scipy.io import netcdf_file
 
@@ -84,69 +86,79 @@ def filter_DKES_data(optFile):
 
     return filteredDKESdata
 
-# Identify all configurations in the cloud
+# Get data
 
-basewoutFileName = os.path.join(directory, 'wout_' + ext)
-matchingwoutFiles = sorted(glob(basewoutFileName + '_opt*.nc'))
+if loadPickle is None:
 
-# Loop through files, extract desired data, and pair with the configuration
+    # Identify all configurations in the cloud
 
-allData = {}
+    basewoutFileName = os.path.join(directory, 'wout_' + ext)
+    matchingwoutFiles = sorted(glob(basewoutFileName + '_opt*.nc'))
 
-for woutFile in matchingwoutFiles:
+    # Loop through files, extract desired data, and pair with the configuration
+
+    allData = {}
+
+    for woutFile in matchingwoutFiles:
+        
+        # Instantiate a dictionary that will hold all the information forthis configuration
+
+        configData = {}
+
+        # Isolate the opt number to keep configurations straight
+
+        optNum = int(woutFile.split('_opt')[-1].strip().split('.')[0])
+
+        if optNum == 0: # There is an 'extra' wout file, so we skip it
+            continue
+       
+        # Get configuration data
+
+        wout = netcdf_file(woutFile, mode='r', mmap=False)
+
+        vmecData = {
+                    'aspect':    wout.variables['aspect'][()],
+                    'betatotal': wout.variables['betatotal'][()],
+                    'b0':        wout.variables['b0'][()],
+                    'volavgB':   wout.variables['volavgB'][()],
+                    'Aminor_p':  wout.variables['Aminor_p'][()],
+                    'Rmajor_p':  wout.variables['Rmajor_p'][()],
+                    'volume_p':  wout.variables['volume_p'][()],
+                    'iota':      wout.variables['iotaf'][()],
+                    'rmnc':      wout.variables['rmnc'][()],
+                    'zmns':      wout.variables['zmns'][()]
+                   }
+
+        configData['vmecData'] = vmecData
+
+        # Get eps_eff data
+        
+        epseffFileName = os.path.join(directory, 'neo_out.' + ext + '_opt' + str(optNum))
+        eps_eff = get_eps_eff(epseffFileName)
+        configData['eps_eff'] = eps_eff
+
+        # Get DKES data
+        
+        baseDKESFileName = os.path.join(directory, 'opt_dkes.' + ext + '_opt' + str(optNum))
+        matchingDKESFileNames = sorted(glob(baseDKESFileName + '_s*'))
+
+        DKESdata = np.array([])
+        
+        for DKESFile in matchingDKESFileNames:
+            DKESdata = np.append(DKESdata, filter_DKES_data(DKESFile))
+        
+        configData['L11'] = DKESdata
+
+        # Append configuration data to the allData dictionary
+
+        allData[optNum] = configData
+
+    with open('allData.pkl', 'wb') as f:
+        pkl.dump(allData, f)
+
+else:
     
-    # Instantiate a dictionary that will hold all the information forthis configuration
+    with open(loadPickle, 'rb') as f:
+        allData = pkl.load(f)
 
-    configData = {}
-
-    # Isolate the opt number to keep configurations straight
-
-    optNum = int(woutFile.split('_opt')[-1].strip().split('.')[0])
-
-    if optNum == 0: #FIXME might be necessary since there is an 'extra' wout*_opt0 file
-        continue
-   
-    # Get configuration data
-
-    vmecData = {}
-
-    wout = netcdf_file(woutFile, mode='r', mmap=False)
-
-    vmecData = {
-                'aspect':    wout.variables['aspect'][()],
-                'betatotal': wout.variables['betatotal'][()],
-                'b0':        wout.variables['b0'][()],
-                'volavgB':   wout.variables['volavgB'][()],
-                'Aminor_p':  wout.variables['Aminor_p'][()],
-                'Rmajor_p':  wout.variables['Rmajor_p'][()],
-                'volume_p':  wout.variables['volume_p'][()],
-                'iota':      wout.variables['iotaf'][()],
-                'rmnc':      wout.variables['rmnc'][()],
-                'zmns':      wout.variables['zmns'][()]
-               }
-
-    configData['vmecData'] = vmecData
-
-    # Get eps_eff data
-    
-    epseffFileName = os.path.join(directory, 'neo_out.' + ext + '_opt' + str(optNum))
-    eps_eff = get_eps_eff(epseffFileName)
-    configData['eps_eff'] = eps_eff
-
-    # Get DKES data
-    
-    baseDKESFileName = os.path.join(directory, 'opt_dkes.' + ext + '_opt' + str(optNum))
-    matchingDKESFileNames = sorted(glob(baseDKESFileName + '_s*'))
-
-    DKESdata = np.array([])
-    
-    for DKESFile in matchingDKESFileNames:
-        DKESdata = np.append(DKESdata, filter_DKES_data(DKESFile))
-    
-    configData['L11'] = DKESdata
-
-    # Append configuration data to the allData dictionary
-
-    allData[optNum] = configData
-
-print(allData)
+# FIXME you're going to need to write your own stuff to normalize to D_11^* and nu^*, then use Hakan's fit function.
