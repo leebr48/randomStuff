@@ -1,5 +1,5 @@
 # Settings
-profsFilePath = 'profs_1b' # Path to the main file. Auxiliary files (such as *_Dij) can also be used.
+profsFilePath = 'profs_1b' # Path to the main file. Auxiliary files (such as *_Dij) will also be loaded by the program.
 rhoMin = 0
 rhoMax = 0.85 # Especially useful if the edge is broken...
 useRho = True
@@ -27,8 +27,13 @@ mainInds = {
 LInds = {
 'r':1, # In m
 'L11e':2, # In m^2/s
+'L12e':3, # In m^2/s
 'L11D':8, # In m^2/s
+'L12D':9, # In m^2/s
 'L11T':14, # In m^2/s
+'L12T':15, # In m^2/s
+'L11He':20, # In m^2/s
+'L12He':21 # In m^2/s
 }
 
 ################################################################
@@ -55,9 +60,9 @@ def loadData(filePath, fileType='main'):
     return data[(data[:, rInd]/a >= rhoMin) & (data[:, rInd]/a <= rhoMax)]
 
 def loadVec(ind, fileType='main'):
-    if fileType = 'main':
+    if fileType == 'main':
         return mainFilteredData[:, fixInd(ind)]
-    elif fileType = 'L':
+    elif fileType == 'L':
         return LFilteredData[:, fixInd(ind)]
     else:
         raise IOError('Unkown fileType.')
@@ -81,6 +86,11 @@ def multiPlot(xdata, ydataList):
     x = np.tile(xdata, (y.shape[1],1)).T
     return x, y
 
+def calcDelta12(species):
+    L11 = 'L11' + species
+    L12 = 'L12' + species
+    return vecs[L12] / vecs[L11] #NOTE: I think NTSS uses the old Maassberg definition (without the 3/2)... if you include the 3/2 you get negative numbers in nonsensical places
+
 # Load data
 mainFilteredData = loadData(profsFilePath, fileType='main')
 LFilteredData = loadData(profsFilePath + '_Dij', fileType='L')
@@ -92,9 +102,20 @@ for variable, index in mainInds.items():
 for variable, index in LInds.items():
     vecs[variable] = loadVec(index, fileType='L')
 
+# Calculate temperature screening threshold using Beidler's 2022 Simons talk
+d12e = calcDelta12('e')
+d12D = calcDelta12('D')
+d12T = calcDelta12('T')
+d12He = calcDelta12('He')
+gamma = vecs['nT'] / vecs['nD']
+d12i = (vecs['L11D'] * d12D + gamma * vecs['L11T'] * d12T) / (vecs['L11D'] + gamma * vecs['L11T'])
+ni = vecs['nD'] + vecs['nT']
+ZHe = 2
+tempScreenThresh = (ZHe * d12i - d12He) / (ZHe * d12e + d12He) / (1 + ZHe * vecs['nHe'] / ni)
+
 # Plot things
 if useRho:
-    xData = vecs['r'] / a
+    xData = vecs['r'] / np.max(vecs['r'])
     xlab = r'$\rho$'
 else:
     xData = vecs['r']
