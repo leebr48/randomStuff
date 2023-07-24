@@ -1,5 +1,5 @@
 # Settings
-profsFilePath = 'profs_1b'
+profsFilePath = 'profs_1b' # Path to the main file. Auxiliary files (such as *_Dij) can also be used.
 rhoMin = 0
 rhoMax = 0.85 # Especially useful if the edge is broken...
 useRho = True
@@ -7,8 +7,8 @@ savePlots = True
 showPlots = True
 fileExt = 'png'
 
-# Indices of relevant quantities - use the values in the 'profs' file, they will be converted to Python indices automatically
-inds = {
+# Indices of relevant quantities - use the values listed in the file, they will be converted to Python indices automatically
+mainInds = {
 'r':1, # In m
 'ne':2, # In 10^20 m^-3
 'nD':3, # In 10^20 m^-3
@@ -19,12 +19,16 @@ inds = {
 'TT':8, # In keV
 'Er':9, # In kV/m
 'p':11, # In Pa
-'L11e':16, # In m^2/s
-'L11D':20, # In m^2/s
-'L11T':24, # In m^2/s
 'Ibs':63, # In A
 'vaciota':69, # Uses susceptance matrices to exclude bootstrap current from the calculation, like vaciota in STELLOPT
 'iota':70 # Uses susceptance matrices to include bootstrap current in the calculation
+}
+
+LInds = {
+'r':1, # In m
+'L11e':2, # In m^2/s
+'L11D':8, # In m^2/s
+'L11T':14, # In m^2/s
 }
 
 ################################################################
@@ -36,8 +40,27 @@ import matplotlib.pyplot as plt
 def fixInd(ind):
     return ind - 1
 
-def loadVec(ind):
-    return filteredData[:, fixInd(ind)]
+def loadData(filePath, fileType='main'):
+    if fileType == 'main':
+        skiprows = 1
+        inds = mainInds
+    elif fileType == 'L':
+        skiprows = 2
+        inds = LInds
+    else:
+        raise IOError('Unkown fileType.')
+    data = np.loadtxt(filePath, skiprows=skiprows)
+    rInd = fixInd(inds['r'])
+    a = np.max(data[:, rInd])
+    return data[(data[:, rInd]/a >= rhoMin) & (data[:, rInd]/a <= rhoMax)]
+
+def loadVec(ind, fileType='main'):
+    if fileType = 'main':
+        return mainFilteredData[:, fixInd(ind)]
+    elif fileType = 'L':
+        return LFilteredData[:, fixInd(ind)]
+    else:
+        raise IOError('Unkown fileType.')
 
 def makePlot(xdata, ydata, ylabel, figName, leg=None, fileExt=fileExt, yticks=None, ymin=None):
     plt.figure()
@@ -59,15 +82,15 @@ def multiPlot(xdata, ydataList):
     return x, y
 
 # Load data
-data = np.loadtxt(profsFilePath, skiprows=1)
-rInd = fixInd(inds['r'])
-a = np.max(data[:, rInd])
-filteredData = data[(data[:, rInd]/a >= rhoMin) & (data[:, rInd]/a <= rhoMax)]
+mainFilteredData = loadData(profsFilePath, fileType='main')
+LFilteredData = loadData(profsFilePath + '_Dij', fileType='L')
 
 # Grab relevant variables
 vecs = {}
-for variable, index in inds.items():
-    vecs[variable] = loadVec(index)
+for variable, index in mainInds.items():
+    vecs[variable] = loadVec(index, fileType='main')
+for variable, index in LInds.items():
+    vecs[variable] = loadVec(index, fileType='L')
 
 # Plot things
 if useRho:
