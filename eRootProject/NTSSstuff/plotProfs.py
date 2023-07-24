@@ -3,6 +3,7 @@ profsFilePath = 'profs_1b' # Path to the main file. Auxiliary files (such as *_D
 rhoMin = 0
 rhoMax = 0.85 # Especially useful if the edge is broken...
 useRho = True
+showTempScreenThresh = False
 savePlots = True
 showPlots = True
 fileExt = 'png'
@@ -46,6 +47,7 @@ def fixInd(ind):
     return ind - 1
 
 def loadData(filePath, fileType='main'):
+    global a
     if fileType == 'main':
         skiprows = 1
         inds = mainInds
@@ -115,7 +117,7 @@ tempScreenThresh = (ZHe * d12i - d12He) / (ZHe * d12e + d12He) / (1 + ZHe * vecs
 
 # Plot things
 if useRho:
-    xData = vecs['r'] / np.max(vecs['r'])
+    xData = vecs['r'] / a
     xlab = r'$\rho$'
 else:
     xData = vecs['r']
@@ -126,7 +128,10 @@ makePlot(*multiPlot(xData, [vecs['Te'], vecs['TD'], vecs['TT'], vecs['TT']]), r'
 makePlot(xData, vecs['Er'], r'Radial Electric Field (kV/m)', 'Er')
 makePlot(xData, vecs['p'], r'Pressure (Pa)', 'p', ymin=0)
 makePlot(*multiPlot(xData, [vecs['L11e'], vecs['L11D'], vecs['L11T']]), r'$L_{11}$ ($\mathrm{m^2/s}$)', 'L11s', leg=['e', 'D', 'T'], ymin=0)
-makePlot(xData, vecs['L11e']/(0.5*(vecs['L11D']+vecs['L11T'])), r'$ 2 L_{11}^{e} / \left(L_{11}^{D}+L_{11}^{T}\right) $', 'L11rat', yticks=0.5)
+if showTempScreenThresh:
+    makePlot(*multiPlot(xData, [vecs['L11e']/(0.5*(vecs['L11D']+vecs['L11T'])), tempScreenThresh]), r'$ 2 L_{11}^{e} / \left(L_{11}^{D}+L_{11}^{T}\right) $', 'L11rat', leg=['Actual', 'He Tmp. Scrn. Thresh.'], yticks=0.5, ymin=0)
+else:
+    makePlot(xData, vecs['L11e']/(0.5*(vecs['L11D']+vecs['L11T'])), r'$ 2 L_{11}^{e} / \left(L_{11}^{D}+L_{11}^{T}\right) $', 'L11rat', yticks=0.5)
 makePlot(xData, vecs['Ibs'] / 1000, r'Bootstrap Current (kA)', 'Ibs')
 makePlot(xData, vecs['vaciota'], r'Vacuum Rotational Transform', 'vaciota')
 makePlot(xData, vecs['iota'], r'Rotational Transform', 'iota')
