@@ -2,6 +2,10 @@
 profsFilePath = 'profs_1b' # Path to the main file. Auxiliary files (such as *_Dij) will also be loaded by the program.
 rhoMin = 0
 rhoMax = 0.85 # Especially useful if the edge is broken...
+axisFontSize = 24
+legendFontSize = 14
+xSizeInches = 7.9
+ySizeInches = 6.0
 useRho = True
 showTempScreenThresh = False
 savePlots = True
@@ -42,6 +46,9 @@ LInds = {
 import numpy as np
 import matplotlib.pyplot as plt
 
+plt.rc('font', size=axisFontSize)
+plt.rc('legend', fontsize=legendFontSize)
+
 # Handy functions
 def fixInd(ind):
     return ind - 1
@@ -70,7 +77,7 @@ def loadVec(ind, fileType='main'):
         raise IOError('Unkown fileType.')
 
 def makePlot(xdata, ydata, ylabel, figName, leg=None, fileExt=fileExt, yticks=None, ymin=None):
-    plt.figure()
+    plt.subplots(figsize=(xSizeInches, ySizeInches))
     plt.plot(xdata, ydata)
     if ymin is not None:
         plt.ylim(ymin=ymin)
