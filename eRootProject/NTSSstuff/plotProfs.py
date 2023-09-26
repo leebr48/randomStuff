@@ -76,9 +76,13 @@ def loadVec(ind, fileType='main'):
     else:
         raise IOError('Unkown fileType.')
 
-def makePlot(xdata, ydata, ylabel, figName, leg=None, fileExt=fileExt, yticks=None, ymin=None):
+def makePlot(xdata, ydata, ylabel, figName, leg=None, linestyles=None, fileExt=fileExt, yticks=None, ymin=None):
     plt.subplots(figsize=(xSizeInches, ySizeInches))
-    plt.plot(xdata, ydata)
+    if linestyles is None:
+        plt.plot(xdata, ydata)
+    else:
+        for X, Y, L in zip(xdata.T, ydata.T, linestyles):
+            plt.plot(X, Y, linestyle=L)
     if ymin is not None:
         plt.ylim(ymin=ymin)
     if yticks is not None:
@@ -130,8 +134,11 @@ else:
     xData = vecs['r']
     xlab = r'$r$ (m)'
 
-makePlot(*multiPlot(xData, [vecs['ne'], vecs['nD'], vecs['nT'], vecs['nHe']]), r'Density ($10^{20}~\mathrm{m^{-3}}$)', 'n', leg=['e', 'D', 'T', 'He'], ymin=0)
-makePlot(*multiPlot(xData, [vecs['Te'], vecs['TD'], vecs['TT'], vecs['TT']]), r'Temperature (keV)', 'T', leg=['e', 'D', 'T', 'He'], ymin=0)
+stdLeg = ['e', 'D', 'T', 'He']
+stdStyle = ['solid', 'solid', 'dashed', 'dotted']
+
+makePlot(*multiPlot(xData, [vecs['ne'], vecs['nD'], vecs['nT'], vecs['nHe']]), r'Density ($10^{20}~\mathrm{m^{-3}}$)', 'n', leg=stdLeg, linestyles=stdStyle, ymin=0)
+makePlot(*multiPlot(xData, [vecs['Te'], vecs['TD'], vecs['TT'], vecs['TT']]), r'Temperature (keV)', 'T', leg=stdLeg, linestyles=stdStyle, ymin=0)
 makePlot(xData, vecs['Er'], r'Radial Electric Field (kV/m)', 'Er')
 makePlot(xData, vecs['p'], r'Pressure (Pa)', 'p', ymin=0)
 makePlot(*multiPlot(xData, [vecs['L11e'], vecs['L11D'], vecs['L11T']]), r'$L_{11}$ ($\mathrm{m^2/s}$)', 'L11s', leg=['e', 'D', 'T'], ymin=0)
