@@ -3,10 +3,10 @@
 # This script was originally written by Hakan Smith.
 
 # Inputs
-lowerXLim = 2e-5
-upperXLim = 4e2
-lowerYLim = 1e-3
-upperYLim = 2e2
+lowerXLim = 1.0e-4
+upperXLim = 1.0e0
+lowerYLim = 1.5e-3
+upperYLim = 5.0e1
 fileExt = 'png'
 
 # Code
