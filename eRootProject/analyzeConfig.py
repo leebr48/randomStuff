@@ -7,7 +7,7 @@ numQIres = 10
 axisFontSize = 24
 xSizeInches = 7.9
 ySizeInches = 7.9
-fileType = 'pdf' # Can be 'pdf' or 'png'
+fileType = 'png' # Can be 'pdf' or 'png'
 showPlots = True
 
 #############################################################################################################################
