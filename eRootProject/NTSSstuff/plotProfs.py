@@ -141,7 +141,7 @@ makePlot(*multiPlot(xData, [vecs['ne'], vecs['nD'], vecs['nT'], vecs['nHe']]), r
 makePlot(*multiPlot(xData, [vecs['Te'], vecs['TD'], vecs['TT'], vecs['TT']]), r'Temperature (keV)', 'T', leg=stdLeg, linestyles=stdStyle, ymin=0)
 makePlot(xData, vecs['Er'], r'Radial Electric Field (kV/m)', 'Er')
 makePlot(xData, vecs['p'], r'Pressure (Pa)', 'p', ymin=0)
-makePlot(*multiPlot(xData, [vecs['L11e'], vecs['L11D'], vecs['L11T']]), r'$L_{11}$ ($\mathrm{m^2/s}$)', 'L11s', leg=['e', 'D', 'T'], ymin=0)
+makePlot(*multiPlot(xData, [vecs['L11e'], vecs['L11D'], vecs['L11T']]), r'$L_{11}$ ($\mathrm{m^2/s}$)', 'L11s', leg=['e', 'D', 'T'], linestyles=stdStyle[:-1], ymin=0)
 if showTempScreenThresh:
     makePlot(*multiPlot(xData, [vecs['L11e']/(0.5*(vecs['L11D']+vecs['L11T'])), tempScreenThresh]), r'$ 2 L_{11}^{e} / \left(L_{11}^{D}+L_{11}^{T}\right) $', 'L11rat', leg=['Actual', 'He Tmp. Scrn. Thresh.'], yticks=0.5, ymin=0)
 else:
