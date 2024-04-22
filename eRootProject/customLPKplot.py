@@ -1,9 +1,10 @@
 fname = './DKESstuff/wout_Lee_1.nc'
+figName = 'lee1_lpk'
 axisFontSize = 24
 xSizeInches = 7.9
 ySizeInches = 7.9
-figName = 'lpk'
-fileExt = 'png'
+dpi = 600
+fileExt = 'pdf'
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -65,6 +66,6 @@ plt.gca().set_aspect('equal',adjustable='box')
 plt.xlabel('R (m)')
 plt.ylabel('Z (m)')
 
-plt.savefig(figName+'.'+fileExt, bbox_inches='tight', dpi=400)
+plt.savefig(figName+'.'+fileExt, bbox_inches='tight', dpi=dpi)
 plt.show()
 plt.close()
