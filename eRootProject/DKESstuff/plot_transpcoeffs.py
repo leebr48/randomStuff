@@ -11,7 +11,7 @@ axisFontSize = 24
 legendFontSize = 14
 xSizeInches = 7.9
 ySizeInches = 7.9
-fileExt = 'png'
+fileExt = 'pdf'
 
 # Code
 import sys, os
