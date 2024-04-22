@@ -1,11 +1,18 @@
-fname = './DKESstuff/wout_Lee_1.nc'
-figName = 'lee1_lpk'
+fname = './DKESstuff/wout_Lee_2.nc'
+figName = 'lee2_lpk'
+xmin = 17 # either 17 or 35
+xmax = 25 # either 25 or 43
+ymin = -5.25
+ymax = 5.25
+numticks = 5
 axisFontSize = 24
-xSizeInches = 7.9
-ySizeInches = 7.9
+xSizeInches = xmax - xmin
+ySizeInches = ymax - ymin
 dpi = 600
 fileExt = 'pdf'
 
+import matplotlib as mpl
+from matplotlib.ticker import LinearLocator
 import matplotlib.pyplot as plt
 import numpy as np
 from simsopt.mhd.vmec import Vmec
@@ -62,7 +69,9 @@ for ind in range(nzeta):
     plt.plot(R[:,ind], Z[:,ind], '-')
     plt.plot(R[:,ind], Z[:,ind], '-')
     plt.plot(R[:,ind], Z[:,ind], '-')
-plt.gca().set_aspect('equal',adjustable='box')
+
+plt.axis((xmin, xmax, ymin, ymax))
+plt.gca().xaxis.set_major_locator(LinearLocator(numticks=numticks))
 plt.xlabel('R (m)')
 plt.ylabel('Z (m)')
 
