@@ -2,14 +2,15 @@
 
 #Inputs
 rhoMin = 0
-rhoMax = 0.85
+rhoMax = 1
 DMercYMin = -0.001
 DMercYMax = 0.01
 axisFontSize = 24
 legendFontSize = 14
-xSizeInches = 7.9
+xSizeInches = 8
 ySizeInches = 6.0
-fileExt = 'png'
+fileExt = 'pdf'
+dpi = 600
 
 ########################################################################################
 
@@ -25,47 +26,58 @@ plt.rc('font', size=axisFontSize)
 plt.rc('legend', fontsize=legendFontSize)
 
 # Load data
-epseff_opt = np.loadtxt('epseff_opt.txt')
-epseff_w7xhm = np.loadtxt('epseff_w7xhm.txt')
+lee1_epseff = np.loadtxt('lee1_epseff.txt')
+lee2_epseff = np.loadtxt('lee2_epseff.txt')
+lee3_epseff = np.loadtxt('lee3_epseff.txt')
+w7xhm_epseff = np.loadtxt('w7xhm_epseff.txt')
 
-wout_opt = netcdf_file('../DKESstuff/wout_Lee_1.nc', mode='r', mmap=False)
-wout_init = netcdf_file('../initialConfigs/wout_W7X_REACTOR_FULL_woptim_forSfincs_correctPres.nc', mode='r', mmap=False)
-ns_opt = wout_opt.variables['ns'][()]
-ns_init = wout_init.variables['ns'][()]
-if ns_opt == ns_init:
-    ns = ns_opt
+lee1_wout = netcdf_file('../DKESstuff/wout_Lee_1.nc', mode='r', mmap=False)
+lee2_wout = netcdf_file('../DKESstuff/wout_Lee_2.nc', mode='r', mmap=False)
+lee3_wout = netcdf_file('../DKESstuff/wout_Lee_3.nc', mode='r', mmap=False)
+w7xhm_wout = netcdf_file('../initialConfigs/wout_W7X_REACTOR_FULL_woptim_forSfincs_correctPres.nc', mode='r', mmap=False)
+lee1_ns = lee1_wout.variables['ns'][()]
+lee2_ns = lee2_wout.variables['ns'][()]
+lee3_ns = lee3_wout.variables['ns'][()]
+w7xhm_ns = w7xhm_wout.variables['ns'][()]
+if lee1_ns == lee2_ns == lee3_ns == w7xhm_ns:
+    ns = lee1_ns
 else:
     raise IOError('"ns" for the initial and optimized configurations differ - something is wrong.')
-DMerc_opt = wout_opt.variables['DMerc'][()]
-DMerc_init = wout_init.variables['DMerc'][()]
+lee1_DMerc = lee1_wout.variables['DMerc'][()]
+lee2_DMerc = lee2_wout.variables['DMerc'][()]
+lee3_DMerc = lee3_wout.variables['DMerc'][()]
+w7xhm_DMerc = w7xhm_wout.variables['DMerc'][()]
 
 # Process data
 _, fulls = createVMECGrids(ns)
 sgrid = fulls[1:] # Ignore the magnetic axis because eps_eff cannot be evaluated there by NEO.
 rhogrid = np.sqrt(sgrid)
-data = np.column_stack((rhogrid, epseff_opt, epseff_w7xhm, DMerc_opt[1:], DMerc_init[1:])) # Need to ignore axis for magnetic well
+data = np.column_stack((rhogrid, lee1_epseff, lee2_epseff, lee3_epseff, w7xhm_epseff, lee1_DMerc[1:], lee2_DMerc[1:], lee3_DMerc[1:], w7xhm_DMerc[1:])) # Need to ignore axis for magnetic well
 filteredData = data[(data[:, 0] >= rhoMin) & (data[:, 0] <= rhoMax)]
 
 # Plot data
 plt.subplots(figsize=(xSizeInches, ySizeInches))
 plt.plot(filteredData[:,0], filteredData[:,1])
 plt.plot(filteredData[:,0], filteredData[:,2])
-plt.yticks(np.arange(0,np.ceil(np.max(filteredData[:,1]))+1, 1))
-plt.xlim(xmin=-0.01)
-plt.xlabel(r'$\rho$')
-plt.ylabel(r'$\epsilon_\mathrm{eff}$ (%)')
-plt.legend(['Opt. Config.', 'W7-X High-Mirror'])
-plt.savefig('epseff'+'.'+fileExt, bbox_inches='tight', dpi=400)
-
-plt.subplots(figsize=(xSizeInches, ySizeInches))
 plt.plot(filteredData[:,0], filteredData[:,3])
 plt.plot(filteredData[:,0], filteredData[:,4])
+plt.yticks(np.arange(0,np.ceil(np.max(filteredData[:,1]))+1, 1))
+plt.xlim(xmin=0)
+plt.xlabel(r'$\rho$')
+plt.ylabel(r'$\epsilon_\mathrm{eff}$ (%)')
+plt.legend(['Configuration 1', 'Configuration 2', 'Configuration 3', 'W7-X High-Mirror'])
+plt.savefig('epseff'+'.'+fileExt, bbox_inches='tight', dpi=dpi)
+
+plt.subplots(figsize=(xSizeInches, ySizeInches))
+plt.plot(filteredData[:,0], filteredData[:,5])
+plt.plot(filteredData[:,0], filteredData[:,6])
+plt.plot(filteredData[:,0], filteredData[:,7])
+plt.plot(filteredData[:,0], filteredData[:,8])
 plt.xlim(xmin=0)
 plt.ylim(ymin=DMercYMin, ymax=DMercYMax)
 plt.xlabel(r'$\rho$')
 plt.ylabel(r'$D_\mathrm{Merc}$')
-plt.legend(['Opt. Config.', 'Init. Config.'])
-
-plt.savefig('DMerc'+'.'+fileExt, bbox_inches='tight', dpi=400)
+plt.legend(['Configuration 1', 'Configuration 2', 'Configuration 3', 'W7-X High-Mirror'])
+plt.savefig('DMerc'+'.'+fileExt, bbox_inches='tight', dpi=dpi)
 
 plt.show()
