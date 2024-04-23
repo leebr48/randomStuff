@@ -1,8 +1,10 @@
 # Settings
-profsFilePath = 'profs_Lee_3' # Path to the main file. Auxiliary files (such as *_Dij) will also be loaded by the program. # Should be 'profs_1b', 'profs_2_eroot', 'profs_Lee_3', or 'profs_w7xhm'
-figNamePrefix = 'lee3'
+profsFilePath = 'profs_1b' # Path to the main file. Auxiliary files (such as *_Dij) will also be loaded by the program. # Should be 'profs_1b', 'profs_2_eroot', 'profs_Lee_3', or 'profs_w7xhm'
+figNamePrefix = 'lee1'
 rhoMin = 0
 rhoMax = 1 # Especially useful if the edge is broken... # Should be 0.85 or 1
+nMax = 2.5
+TMax = 25.1
 axisFontSize = 24
 legendFontSize = 14
 xSizeInches = 8
@@ -78,7 +80,7 @@ def loadVec(ind, fileType='main'):
     else:
         raise IOError('Unkown fileType.')
 
-def makePlot(xdata, ydata, ylabel, figName, leg=None, linestyles=None, fileExt=fileExt, yticks=None, ymin=None):
+def makePlot(xdata, ydata, ylabel, figName, leg=None, linestyles=None, fileExt=fileExt, yticks=None, ymin=None, ymax=None):
     plt.subplots(figsize=(xSizeInches, ySizeInches))
     if linestyles is None:
         plt.plot(xdata, ydata)
@@ -87,6 +89,8 @@ def makePlot(xdata, ydata, ylabel, figName, leg=None, linestyles=None, fileExt=f
             plt.plot(X, Y, linestyle=L)
     if ymin is not None:
         plt.ylim(ymin=ymin)
+    if ymax is not None:
+        plt.ylim(ymax=ymax)
     if yticks is not None:
         plt.yticks(np.arange(np.floor(np.min(ydata)), np.ceil(np.max(ydata))+yticks, yticks))
     plt.xlabel(xlab)
@@ -139,8 +143,8 @@ else:
 stdLeg = ['e', 'D', 'T', 'He']
 stdStyle = ['solid', 'solid', 'dashed', 'dotted']
 
-makePlot(*multiPlot(xData, [vecs['ne'], vecs['nD'], vecs['nT'], vecs['nHe']]), r'Density ($10^{20}~\mathrm{m^{-3}}$)', figNamePrefix + '_n', leg=stdLeg, linestyles=stdStyle, ymin=0)
-makePlot(*multiPlot(xData, [vecs['Te'], vecs['TD'], vecs['TT'], vecs['TT']]), r'Temperature (keV)', figNamePrefix + '_T', leg=stdLeg, linestyles=stdStyle, ymin=0)
+makePlot(*multiPlot(xData, [vecs['ne'], vecs['nD'], vecs['nT'], vecs['nHe']]), r'Density ($10^{20}~\mathrm{m^{-3}}$)', figNamePrefix + '_n', leg=stdLeg, linestyles=stdStyle, ymin=0, ymax=nMax)
+makePlot(*multiPlot(xData, [vecs['Te'], vecs['TD'], vecs['TT'], vecs['TT']]), r'Temperature (keV)', figNamePrefix + '_T', leg=stdLeg, linestyles=stdStyle, ymin=0, ymax=TMax)
 makePlot(xData, vecs['Er'], r'Radial Electric Field (kV/m)', figNamePrefix + '_Er')
 makePlot(xData, vecs['p'], r'Pressure (Pa)', figNamePrefix + '_p', ymin=0)
 makePlot(*multiPlot(xData, [vecs['L11e'], vecs['L11D'], vecs['L11T']]), r'$L_{11}$ ($\mathrm{m^2/s}$)', figNamePrefix + '_L11s', leg=['e', 'D', 'T'], linestyles=stdStyle[:-1], ymin=0)
