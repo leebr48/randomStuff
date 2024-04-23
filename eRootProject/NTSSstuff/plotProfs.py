@@ -1,16 +1,18 @@
 # Settings
-profsFilePath = 'profs_1b' # Path to the main file. Auxiliary files (such as *_Dij) will also be loaded by the program.
+profsFilePath = 'profs_Lee_3' # Path to the main file. Auxiliary files (such as *_Dij) will also be loaded by the program. # Should be 'profs_1b', 'profs_2_eroot', 'profs_Lee_3', or 'profs_w7xhm'
+figNamePrefix = 'lee3'
 rhoMin = 0
-rhoMax = 0.85 # Especially useful if the edge is broken...
+rhoMax = 1 # Especially useful if the edge is broken... # Should be 0.85 or 1
 axisFontSize = 24
 legendFontSize = 14
-xSizeInches = 7.9
-ySizeInches = 6.0
+xSizeInches = 8
+ySizeInches = 6
 useRho = True
 showTempScreenThresh = False
 savePlots = True
 showPlots = True
-fileExt = 'png'
+fileExt = 'pdf'
+dpi = 600
 
 # Indices of relevant quantities - use the values listed in the file, they will be converted to Python indices automatically
 mainInds = {
@@ -92,7 +94,7 @@ def makePlot(xdata, ydata, ylabel, figName, leg=None, linestyles=None, fileExt=f
     if leg is not None:
         plt.legend(leg, loc='best')
     if savePlots:
-        plt.savefig(figName+'.'+fileExt, bbox_inches='tight', dpi=400)
+        plt.savefig(figName+'.'+fileExt, bbox_inches='tight', dpi=dpi)
 
 def multiPlot(xdata, ydataList):
     y = np.column_stack(ydataList)
@@ -137,18 +139,18 @@ else:
 stdLeg = ['e', 'D', 'T', 'He']
 stdStyle = ['solid', 'solid', 'dashed', 'dotted']
 
-makePlot(*multiPlot(xData, [vecs['ne'], vecs['nD'], vecs['nT'], vecs['nHe']]), r'Density ($10^{20}~\mathrm{m^{-3}}$)', 'n', leg=stdLeg, linestyles=stdStyle, ymin=0)
-makePlot(*multiPlot(xData, [vecs['Te'], vecs['TD'], vecs['TT'], vecs['TT']]), r'Temperature (keV)', 'T', leg=stdLeg, linestyles=stdStyle, ymin=0)
-makePlot(xData, vecs['Er'], r'Radial Electric Field (kV/m)', 'Er')
-makePlot(xData, vecs['p'], r'Pressure (Pa)', 'p', ymin=0)
-makePlot(*multiPlot(xData, [vecs['L11e'], vecs['L11D'], vecs['L11T']]), r'$L_{11}$ ($\mathrm{m^2/s}$)', 'L11s', leg=['e', 'D', 'T'], linestyles=stdStyle[:-1], ymin=0)
+makePlot(*multiPlot(xData, [vecs['ne'], vecs['nD'], vecs['nT'], vecs['nHe']]), r'Density ($10^{20}~\mathrm{m^{-3}}$)', figNamePrefix + '_n', leg=stdLeg, linestyles=stdStyle, ymin=0)
+makePlot(*multiPlot(xData, [vecs['Te'], vecs['TD'], vecs['TT'], vecs['TT']]), r'Temperature (keV)', figNamePrefix + '_T', leg=stdLeg, linestyles=stdStyle, ymin=0)
+makePlot(xData, vecs['Er'], r'Radial Electric Field (kV/m)', figNamePrefix + '_Er')
+makePlot(xData, vecs['p'], r'Pressure (Pa)', figNamePrefix + '_p', ymin=0)
+makePlot(*multiPlot(xData, [vecs['L11e'], vecs['L11D'], vecs['L11T']]), r'$L_{11}$ ($\mathrm{m^2/s}$)', figNamePrefix + '_L11s', leg=['e', 'D', 'T'], linestyles=stdStyle[:-1], ymin=0)
 if showTempScreenThresh:
-    makePlot(*multiPlot(xData, [vecs['L11e']/(0.5*(vecs['L11D']+vecs['L11T'])), tempScreenThresh]), r'$ 2 L_{11}^{e} / \left(L_{11}^{D}+L_{11}^{T}\right) $', 'L11rat', leg=['Actual', 'He Tmp. Scrn. Thresh.'], yticks=0.5, ymin=0)
+    makePlot(*multiPlot(xData, [vecs['L11e']/(0.5*(vecs['L11D']+vecs['L11T'])), tempScreenThresh]), r'$ 2 L_{11}^{e} / \left(L_{11}^{D}+L_{11}^{T}\right) $', figNamePrefix + '_L11rat', leg=['Actual', 'He Tmp. Scrn. Thresh.'], yticks=0.5, ymin=0)
 else:
-    makePlot(xData, vecs['L11e']/(0.5*(vecs['L11D']+vecs['L11T'])), r'$ 2 L_{11}^{e} / \left(L_{11}^{D}+L_{11}^{T}\right) $', 'L11rat', yticks=0.5)
-makePlot(xData, vecs['Ibs'] / 1000, r'Bootstrap Current (kA)', 'Ibs')
-makePlot(xData, vecs['vaciota'], r'Vacuum Rotational Transform', 'vaciota')
-makePlot(xData, vecs['iota'], r'Rotational Transform', 'iota')
+    makePlot(xData, vecs['L11e']/(0.5*(vecs['L11D']+vecs['L11T'])), r'$ 2 L_{11}^{e} / \left(L_{11}^{D}+L_{11}^{T}\right) $', figNamePrefix + '_L11rat', yticks=0.5)
+makePlot(xData, vecs['Ibs'] / 1000, r'Bootstrap Current (kA)', figNamePrefix + '_Ibs')
+makePlot(xData, vecs['vaciota'], r'Vacuum Rotational Transform', figNamePrefix + '_vaciota')
+makePlot(xData, vecs['iota'], r'Rotational Transform', figNamePrefix + '_iota')
 
 if showPlots:
     plt.show()
