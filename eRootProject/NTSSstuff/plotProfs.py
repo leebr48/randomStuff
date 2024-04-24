@@ -49,6 +49,7 @@ LInds = {
 # Import necessary modules
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
 
 plt.rc('font', size=axisFontSize)
 plt.rc('legend', fontsize=legendFontSize)
@@ -80,13 +81,24 @@ def loadVec(ind, fileType='main'):
     else:
         raise IOError('Unkown fileType.')
 
+def my_formatter(x, pos):
+    if x == 0:
+        return str(int(0))
+    elif x == 1:
+        return str(int(1))
+    else:
+        return '{0:.1f}'.format(x)
+
 def makePlot(xdata, ydata, ylabel, figName, leg=None, linestyles=None, fileExt=fileExt, yticks=None, ymin=None, ymax=None):
+    formatter = FuncFormatter(my_formatter)
     plt.subplots(figsize=(xSizeInches, ySizeInches))
     if linestyles is None:
         plt.plot(xdata, ydata)
     else:
         for X, Y, L in zip(xdata.T, ydata.T, linestyles):
             plt.plot(X, Y, linestyle=L)
+    plt.xlim(xmin=np.min(xdata), xmax=np.max(xdata))
+    plt.gca().xaxis.set_major_formatter(formatter)
     if ymin is not None:
         plt.ylim(ymin=ymin)
     if ymax is not None:

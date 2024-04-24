@@ -3,6 +3,7 @@
 #Inputs
 rhoMin = 0
 rhoMax = 1
+epseffMax = 5
 DMercYMin = -0.001
 DMercYMax = 0.01
 axisFontSize = 24
@@ -17,6 +18,7 @@ dpi = 600
 # Import modules
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
 import sys
 from scipy.io import netcdf_file
 sys.path.append('/home/blee/src/stelloptPlusSfincs/src')
@@ -24,6 +26,17 @@ from dataProc import createVMECGrids
 
 plt.rc('font', size=axisFontSize)
 plt.rc('legend', fontsize=legendFontSize)
+
+# Define handy function
+def my_formatter(x, pos):
+    if x == 0:
+        return str(int(0))
+    elif x == 1:
+        return str(int(1))
+    else:
+        return '{0:.1f}'.format(x)
+
+formatter = FuncFormatter(my_formatter)
 
 # Load data
 lee1_epseff = np.loadtxt('lee1_epseff.txt')
@@ -62,7 +75,9 @@ plt.plot(filteredData[:,0], filteredData[:,2])
 plt.plot(filteredData[:,0], filteredData[:,3])
 plt.plot(filteredData[:,0], filteredData[:,4])
 plt.yticks(np.arange(0,np.ceil(np.max(filteredData[:,1]))+1, 1))
-plt.xlim(xmin=0)
+plt.xlim(xmin=0, xmax=1)
+plt.ylim(ymax=epseffMax)
+plt.gca().xaxis.set_major_formatter(formatter)
 plt.xlabel(r'$\rho$')
 plt.ylabel(r'$\epsilon_\mathrm{eff}$ (%)')
 plt.legend(['Configuration 1', 'Configuration 2', 'Configuration 3', 'W7-X High-Mirror'])
@@ -73,8 +88,9 @@ plt.plot(filteredData[:,0], filteredData[:,5])
 plt.plot(filteredData[:,0], filteredData[:,6])
 plt.plot(filteredData[:,0], filteredData[:,7])
 plt.plot(filteredData[:,0], filteredData[:,8])
-plt.xlim(xmin=0)
+plt.xlim(xmin=0, xmax=1)
 plt.ylim(ymin=DMercYMin, ymax=DMercYMax)
+plt.gca().xaxis.set_major_formatter(formatter)
 plt.xlabel(r'$\rho$')
 plt.ylabel(r'$D_\mathrm{Merc}$')
 plt.legend(['Configuration 1', 'Configuration 2', 'Configuration 3', 'W7-X High-Mirror'])

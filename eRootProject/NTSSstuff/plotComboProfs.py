@@ -3,13 +3,21 @@ profsFilePaths = ['profs_1b', 'profs_2_eroot', 'profs_Lee_3'] # Path to the main
 figNamePrefix = 'Ers'
 rhoMin = 0
 rhoMax = 1 # Especially useful if the edge is broken... # Should be 0.85 or 1
+ErMin = -15
+ErMax = 25
+L11RatMin = 0
+L11RatMax = 3
+IbsMin = -50
+IbsMax = 300
+iotaMin = 0.8
+iotaMax = 1.4
 axisFontSize = 24
 legendFontSize = 14
 xSizeInches = 8
 ySizeInches = 6
 useRho = True
 showTempScreenThresh = False
-savePlots = False # FIXME
+savePlots = True
 showPlots = True
 fileExt = 'pdf'
 dpi = 600
@@ -47,6 +55,7 @@ LInds = {
 # Import necessary modules
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
 
 plt.rc('font', size=axisFontSize)
 plt.rc('legend', fontsize=legendFontSize)
@@ -78,13 +87,24 @@ def loadVec(ind, fileType='main'):
     else:
         raise IOError('Unkown fileType.')
 
+def my_formatter(x, pos):
+    if x == 0:
+        return str(int(0))
+    elif x == 1:
+        return str(int(1))
+    else:
+        return '{0:.1f}'.format(x)
+
 def makePlot(xdata, ydata, ylabel, figName, leg=None, linestyles=None, fileExt=fileExt, yticks=None, ymin=None, ymax=None):
+    formatter = FuncFormatter(my_formatter)
     plt.subplots(figsize=(xSizeInches, ySizeInches))
     if linestyles is None:
         plt.plot(xdata, ydata)
     else:
         for X, Y, L in zip(xdata.T, ydata.T, linestyles):
             plt.plot(X, Y, linestyle=L)
+    plt.xlim(xmin=np.min(xdata), xmax=np.max(xdata))
+    plt.gca().xaxis.set_major_formatter(formatter)
     if ymin is not None:
         plt.ylim(ymin=ymin)
     if ymax is not None:
@@ -151,10 +171,11 @@ for profsFilePath in profsFilePaths:
     iotaVecs.append(vecs['iota'])
 
 # Plot things
-makePlot(np.asarray(radVecs).T, np.asarray(ErVecs).T, 'test', 'test')
-plt.show()
-quit()
-makePlot(*multiPlot(xData, [vecs['ne'], vecs['nD'], vecs['nT'], vecs['nHe']]), r'Density ($10^{20}~\mathrm{m^{-3}}$)', figNamePrefix + '_n', leg=stdLeg, linestyles=stdStyle, ymin=0, ymax=nMax)
+leg = ['Configuration 1', 'Configuration 2', 'Configuration 3']
+makePlot(np.asarray(radVecs).T, np.asarray(ErVecs).T, r'Radial Electric Field (kV/m)', 'Ers', leg=leg, ymin=ErMin, ymax=ErMax)
+makePlot(np.asarray(radVecs).T, np.asarray(L11RatVecs).T, r'$ 2 L_{11}^{e} / \left(L_{11}^{D}+L_{11}^{T}\right) $', 'L11Rats', leg=leg, ymin=L11RatMin, ymax=L11RatMax)
+makePlot(np.asarray(radVecs).T, np.asarray(IbsVecs).T / 1000, r'Bootstrap Current (kA)', 'Ibss', leg=leg, ymin=IbsMin, ymax=IbsMax)
+makePlot(np.asarray(radVecs).T, np.asarray(iotaVecs).T, r'Rotational Transform', 'iotas', leg=leg, ymin=iotaMin, ymax=iotaMax)
 
 if showPlots:
     plt.show()
