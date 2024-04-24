@@ -2,7 +2,7 @@
 # This is useful, for instance, if you wish to set up an NTSS run that begins where another ended.
 # Actually, this may be a waste of time...
 
-fileToRead = 'profs_1b'
+fileToRead = 'profs_1c'
 
 # Load modules
 import numpy as np

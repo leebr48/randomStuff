@@ -1,0 +1,12 @@
+'TEMP_D2/scaledMconf.bc' 		Magnetic configuration
+1.9000e+03 		Volume, m^3
+9.3835e-01 		B_scaleCoef
+5.0000e+00 		B_00(r=0), T
+6.4117e+00 		B(r=0,phi=0), T
+5.0680e+00 		sqrt(<B^2>_vol), T
+4.4262e+00 		<beta>, %
+7.7943e-05 		L, H  
+2.7325e-08 		R, Ohm
+2.8524e+03 		L/R, sec
+4.9710e+00 		Itor, kA 
+2.9826e+02 		Ibc, kA 

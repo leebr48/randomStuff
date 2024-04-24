@@ -1,6 +1,5 @@
 # Settings
-profsFilePaths = ['profs_1b', 'profs_2_eroot', 'profs_Lee_3'] # Path to the main file. Auxiliary files (such as *_Dij) will also be loaded by the program.
-figNamePrefix = 'Ers'
+profsFilePaths = ['profs_1c', 'profs_2b', 'profs_3b'] # Path to the main file. Auxiliary files (such as *_Dij) will also be loaded by the program.
 rhoMin = 0
 rhoMax = 1 # Especially useful if the edge is broken... # Should be 0.85 or 1
 ErMin = -15

@@ -1,5 +1,5 @@
 # Settings
-profsFilePath = 'profs_1b' # Path to the main file. Auxiliary files (such as *_Dij) will also be loaded by the program. # Should be 'profs_1b', 'profs_2_eroot', 'profs_Lee_3', or 'profs_w7xhm'
+profsFilePath = 'profs_1c' # Path to the main file. Auxiliary files (such as *_Dij) will also be loaded by the program. # Should be 'profs_1c', 'profs_2b', 'profs_3b', or 'profs_w7xhm'
 figNamePrefix = 'lee1'
 rhoMin = 0
 rhoMax = 1 # Especially useful if the edge is broken... # Should be 0.85 or 1
