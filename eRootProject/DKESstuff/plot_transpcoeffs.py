@@ -8,9 +8,10 @@ upperXLim = 1.0e0
 lowerYLim = 1.5e-3
 upperYLim = 5.0e1
 axisFontSize = 24
-legendFontSize = 14
+legendFontSize = 13
 xSizeInches = 7.9
 ySizeInches = 7.9
+dpi = 600
 fileExt = 'pdf'
 
 # Code
@@ -57,35 +58,35 @@ fighm1, axhm1 =dkhm1.plotD11star_vs_nustar(rhm1, errorbars=True, title='')
 axhm1.set_xlim(left=lowerXLim, right=upperXLim)
 axhm1.set_ylim(bottom=lowerYLim, top=upperYLim)
 fighm1.set_size_inches(xSizeInches, ySizeInches)
-fighm1.savefig('w7xhm_r' + str(rhm1) + '.' + fileExt, bbox_inches='tight', dpi=400)
+fighm1.savefig('w7xhm_r' + str(rhm1) + '.' + fileExt, bbox_inches='tight', dpi=dpi)
 fighm1.show()
 
 figDrevlak, axDrevlak =dkDrevlak.plotD11star_vs_nustar(rDrevlak, errorbars=True, title='')
 axDrevlak.set_xlim(left=lowerXLim, right=upperXLim)
 axDrevlak.set_ylim(bottom=lowerYLim, top=upperYLim)
 figDrevlak.set_size_inches(xSizeInches, ySizeInches)
-figDrevlak.savefig('drevlak_r' + str(rDrevlak) + '.' + fileExt, bbox_inches='tight', dpi=400)
+figDrevlak.savefig('drevlak_r' + str(rDrevlak) + '.' + fileExt, bbox_inches='tight', dpi=dpi)
 figDrevlak.show()
 
 figLee1, axLee1 =dkLee1.plotD11star_vs_nustar(rLee1, errorbars=True, title='')
 axLee1.set_xlim(left=lowerXLim, right=upperXLim)
 axLee1.set_ylim(bottom=lowerYLim, top=upperYLim)
 figLee1.set_size_inches(xSizeInches, ySizeInches)
-figLee1.savefig('lee1_r' + str(rLee1) + '.' + fileExt, bbox_inches='tight', dpi=400)
+figLee1.savefig('lee1_r' + str(rLee1) + '.' + fileExt, bbox_inches='tight', dpi=dpi)
 figLee1.show()
 
 figLee2, axLee2 =dkLee2.plotD11star_vs_nustar(rLee2, errorbars=True, title='')
 axLee2.set_xlim(left=lowerXLim, right=upperXLim)
 axLee2.set_ylim(bottom=lowerYLim, top=upperYLim)
 figLee2.set_size_inches(xSizeInches, ySizeInches)
-figLee2.savefig('lee2_r' + str(rLee2) + '.' + fileExt, bbox_inches='tight', dpi=400)
+figLee2.savefig('lee2_r' + str(rLee2) + '.' + fileExt, bbox_inches='tight', dpi=dpi)
 figLee2.show()
 
 figLee3, axLee3 =dkLee3.plotD11star_vs_nustar(rLee3, errorbars=True, title='')
 axLee3.set_xlim(left=lowerXLim, right=upperXLim)
 axLee3.set_ylim(bottom=lowerYLim, top=upperYLim)
 figLee3.set_size_inches(xSizeInches, ySizeInches)
-figLee3.savefig('lee3_r' + str(rLee3) + '.' + fileExt, bbox_inches='tight', dpi=400)
+figLee3.savefig('lee3_r' + str(rLee3) + '.' + fileExt, bbox_inches='tight', dpi=dpi)
 figLee3.show()
 
 wait_for_user()
