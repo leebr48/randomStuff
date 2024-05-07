@@ -53,6 +53,7 @@ LInds = {
 ################################################################
 # Import necessary modules
 import numpy as np
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 
@@ -115,7 +116,8 @@ def makePlot(xdata, ydata, ylabel, figName, leg=None, linestyles=None, fileExt=f
     if leg is not None:
         plt.legend(leg, loc='best')
     if savePlots:
-        plt.savefig(figName+'.'+fileExt, bbox_inches='tight', dpi=dpi)
+        box = mpl.transforms.Bbox.from_extents((-0.3, -0.25, xSizeInches-0.55, ySizeInches-0.5)) # (xmin, ymin, xmax, ymax)
+        plt.savefig(figName+'.'+fileExt, bbox_inches=box, dpi=dpi)
 
 def multiPlot(xdata, ydataList):
     y = np.column_stack(ydataList)
