@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+
+# This script was written by Hakan Smith.
+
 import sys, os
 import numpy as np
 lib_path=os.getenv('NEOTRANSP_PYTHON_LIB')

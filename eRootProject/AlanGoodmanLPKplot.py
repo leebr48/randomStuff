@@ -1,3 +1,5 @@
+# This script was written by Alan Goodman.
+
 import matplotlib.pyplot as plt
 import numpy as np
 from simsopt.mhd.vmec import Vmec

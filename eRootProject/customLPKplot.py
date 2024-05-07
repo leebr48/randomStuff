@@ -1,3 +1,5 @@
+# This script is based on code from Alan Goodman.
+
 fname = './DKESstuff/wout_Lee_2.nc'
 figName = 'lee2_lpk'
 xmin = 17 # either 17 or 35
